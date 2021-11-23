@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const path = require("path");
 const server = require("http").createServer(app);
 const ws = require("ws");
@@ -10,10 +11,14 @@ const wss = new ws.Server({ server: server });
 
 const clients = [];
 
-// app.use(express.static(path.join(__dirname, "build")));
-// app.get("/", function (req, res) {
-//   res.sendFile(path.join(__dirname, "build", "index.html"));
-// });
+app.use(cors());
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public/static")));
+app.use(express.static(path.join(__dirname)));
+
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 wss.on("connection", (newClient) => {
   clients.push(newClient);
